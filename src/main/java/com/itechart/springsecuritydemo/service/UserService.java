@@ -5,6 +5,8 @@ import com.itechart.springsecuritydemo.dto.UserReadDto;
 import com.itechart.springsecuritydemo.mapper.UserReadMapper;
 import com.itechart.springsecuritydemo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -33,9 +35,7 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
-    public List<UserReadDto> findAll() {
-        return userRepository.findAll().stream()
-                .map(userReadMapper::map)
-                .toList();
+    public Page<UserReadDto> findAll(Pageable pageable) {
+        return userRepository.findAll(pageable).map(userReadMapper::map);
     }
 }
