@@ -33,7 +33,7 @@ public class AuthController {
     @PostMapping("/sign-in")
     public ResponseEntity<String> signIn(@RequestBody SingInRequest singInRequest){
         Authentication authentication =  authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(singInRequest.username(), singInRequest.password()));
-        jwtService.generateToken(authentication);
-        return ResponseEntity.ok(authentication.getName());
+        String token = jwtService.generateToken(authentication);
+        return ResponseEntity.ok(token);
     }
 }
