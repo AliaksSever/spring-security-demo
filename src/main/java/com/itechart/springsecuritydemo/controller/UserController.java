@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @GetMapping("/{uuid}")
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     public UserReadDto findByUuid(@PathVariable UUID uuid) {
         return userService.getUserByUuid(uuid)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with uuid " + uuid + " not found"));
