@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,5 +37,9 @@ public class UserService implements UserDetailsService {
 
     public Page<UserReadDto> findAll(Pageable pageable) {
         return userRepository.findAll(pageable).map(userReadMapper::map);
+    }
+
+    public Optional<UserReadDto> findById(Long id) {
+        return userRepository.findById(id).map(userReadMapper::map);
     }
 }
