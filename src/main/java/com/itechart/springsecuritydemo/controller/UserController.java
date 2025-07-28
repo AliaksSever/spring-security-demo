@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
@@ -28,9 +29,9 @@ public class UserController {
         return userService.findAll(pageable);
     }
 
-    @GetMapping("/{id}")
-    public UserReadDto findById(@PathVariable("id") Long id) {
-        return userService.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id " + id + " not found"));
+    @GetMapping("/{uuid}")
+    public UserReadDto findByUuid(@PathVariable UUID uuid) {
+        return userService.getUserByUuid(uuid)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with uuid " + uuid + " not found"));
     }
 }

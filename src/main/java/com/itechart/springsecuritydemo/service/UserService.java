@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +40,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll(pageable).map(userReadMapper::map);
     }
 
-    public Optional<UserReadDto> findById(Long id) {
-        return userRepository.findById(id).map(userReadMapper::map);
+    public Optional<UserReadDto> getUserByUuid(UUID uuid) {
+        return userRepository.findByUuid(uuid).map(userReadMapper::map);
     }
 }
