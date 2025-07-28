@@ -42,7 +42,7 @@ public class UserService {
                         .username(request.username())
                         .uuid(UUID.randomUUID())
                         .email(request.email())
-                        .role(Role.USER)
+                        .role(Role.valueOf(request.role()))
                         .password(passwordEncoder.encode(request.password()))
                         .build()
                 ));
