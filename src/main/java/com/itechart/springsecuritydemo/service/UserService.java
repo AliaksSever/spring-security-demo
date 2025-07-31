@@ -1,6 +1,6 @@
 package com.itechart.springsecuritydemo.service;
 
-import com.itechart.springsecuritydemo.dto.UserDetailsDto;
+
 import com.itechart.springsecuritydemo.dto.UserReadDto;
 import com.itechart.springsecuritydemo.dto.RegisterRequest;
 import com.itechart.springsecuritydemo.entity.Role;
@@ -41,5 +41,8 @@ public class UserService {
                         .password(passwordEncoder.encode(request.password()))
                         .build()
                 ));
+    }
+    public boolean isExist(RegisterRequest request){
+        return userRepository.existsByEmail(request.email());
     }
 }

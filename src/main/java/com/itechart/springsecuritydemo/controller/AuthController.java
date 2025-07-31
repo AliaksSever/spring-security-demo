@@ -4,11 +4,13 @@ import com.itechart.springsecuritydemo.dto.RegisterRequest;
 import com.itechart.springsecuritydemo.dto.SingInRequest;
 import com.itechart.springsecuritydemo.service.JwtService;
 import com.itechart.springsecuritydemo.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -23,15 +25,23 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
+        if (userService.isExist(request)) {
+            return ResponseEntity.badRequest().body(Map.of("message", "User with email " + request.email() + " already exists"));
+        }
         userService.register(request);
         return ResponseEntity.ok(Map.of("message", "User registered successfully"));
     }
 
     @PostMapping("/sign-in")
-    public ResponseEntity<String> signIn(@RequestBody SingInRequest singInRequest){
-        Authentication authentication =  authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(singInRequest.username(), singInRequest.password()));
-        String token = jwtService.generateToken(authentication);
+    public ResponseEntity<?> signIn(@RequestBody SingInRequest singInRequest) {
+        String token;
+        try {
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(singInRequest.username(), singInRequest.password()));
+             token = jwtService.generateToken(authentication);
+        } catch (AuthenticationException exception){
+            return ResponseEntity.badRequest().body(Map.of("message", "User doesn't exist"));
+        }
         return ResponseEntity.ok(token);
     }
 }

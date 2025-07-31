@@ -18,4 +18,5 @@ public class UserReadDto{
     String password;
     String email;
     Role role;
+
 }
