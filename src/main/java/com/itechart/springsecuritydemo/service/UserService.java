@@ -7,17 +7,12 @@ import com.itechart.springsecuritydemo.entity.Role;
 import com.itechart.springsecuritydemo.mapper.UserReadMapper;
 import com.itechart.springsecuritydemo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -42,7 +37,7 @@ public class UserService {
                         .username(request.username())
                         .uuid(UUID.randomUUID())
                         .email(request.email())
-                        .role(Role.valueOf(request.role()))
+                        .role(Role.USER)
                         .password(passwordEncoder.encode(request.password()))
                         .build()
                 ));

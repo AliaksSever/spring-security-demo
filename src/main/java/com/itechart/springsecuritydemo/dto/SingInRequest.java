@@ -1,4 +1,7 @@
 package com.itechart.springsecuritydemo.dto;
 
-public record SingInRequest(String username, String password) {
-}
+import jakarta.validation.constraints.NotBlank;
+
+public record SingInRequest(
+        @NotBlank String username,
+        @NotBlank String password) { }
