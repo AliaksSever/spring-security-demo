@@ -2,16 +2,22 @@ package com.itechart.springsecuritydemo.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.itechart.springsecuritydemo.entity.Role;
-import lombok.Builder;
-import lombok.Value;
+import jakarta.validation.Valid;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.UUID;
 
+@Builder(toBuilder = true)
 @Value
-@Builder
-public class UserReadDto{
-
+public class UserReadDto {
+    @JsonIgnore
     Long id;
+    @JsonIgnore
     UUID uuid;
     String username;
     @JsonIgnore

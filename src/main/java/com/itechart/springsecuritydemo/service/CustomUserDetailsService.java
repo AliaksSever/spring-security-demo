@@ -1,6 +1,9 @@
 package com.itechart.springsecuritydemo.service;
 
 import com.itechart.springsecuritydemo.dto.UserDetailsDto;
+import com.itechart.springsecuritydemo.dto.UserReadDto;
+import com.itechart.springsecuritydemo.entity.User;
+import com.itechart.springsecuritydemo.mapper.UserReadMapper;
 import com.itechart.springsecuritydemo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,13 +22,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username)
-                .map(user -> UserDetailsDto.builder()
-                        .username(user.getUsername())
-                        .password(user.getPassword())
-                        .authorities(Collections.singleton(new SimpleGrantedAuthority(user.getRole().name())))
-                        .build()
-                )
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+        User user = userRepository.findByUsername(username).orElseThrow(()->
+                new UsernameNotFoundException(username));
+        UserReadDto userReadDto = UserReadMapper.INSTANCE.toDto(user);
+        return new UserDetailsDto(userReadDto);
     }
 }

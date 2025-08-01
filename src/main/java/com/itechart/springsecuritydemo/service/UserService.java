@@ -1,9 +1,11 @@
 package com.itechart.springsecuritydemo.service;
 
 
+import com.itechart.springsecuritydemo.dto.UpdateUserRequest;
 import com.itechart.springsecuritydemo.dto.UserReadDto;
 import com.itechart.springsecuritydemo.dto.RegisterRequest;
 import com.itechart.springsecuritydemo.entity.Role;
+import com.itechart.springsecuritydemo.entity.User;
 import com.itechart.springsecuritydemo.mapper.UserReadMapper;
 import com.itechart.springsecuritydemo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +33,7 @@ public class UserService {
         return userRepository.findByUuid(uuid).map(UserReadMapper.INSTANCE::toDto);
     }
 
-    public void register(RegisterRequest request){
+    public void register(RegisterRequest request) {
         userRepository.save(UserReadMapper.INSTANCE.toEntity(
                 UserReadDto.builder()
                         .username(request.username())
@@ -40,9 +42,22 @@ public class UserService {
                         .role(Role.USER)
                         .password(passwordEncoder.encode(request.password()))
                         .build()
-                ));
+        ));
     }
-    public boolean isExist(RegisterRequest request){
+
+    public boolean isExist(RegisterRequest request) {
         return userRepository.existsByEmail(request.email());
+    }
+
+    public UserReadDto updateProfile(UUID uuid, UpdateUserRequest updateUserRequest) {
+        User user = userRepository.findByUuid(uuid).orElseThrow();
+        user.setEmail(updateUserRequest.email());
+        user.setPassword(passwordEncoder.encode(updateUserRequest.newPassword()));
+        user.setUsername(updateUserRequest.username());
+        return UserReadMapper.INSTANCE.toDto(userRepository.save(user));
+    }
+
+    public boolean checkPassword(UpdateUserRequest updateUserRequest) {
+        return updateUserRequest.newPassword().equals(updateUserRequest.confPassword());
     }
 }

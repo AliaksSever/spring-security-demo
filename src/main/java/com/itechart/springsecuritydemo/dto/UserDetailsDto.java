@@ -1,34 +1,45 @@
 package com.itechart.springsecuritydemo.dto;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-@RequiredArgsConstructor
+@Getter
 @Builder
 public class UserDetailsDto implements UserDetails {
 
-    private final String username;
-    private final String password;
-    private final Set<GrantedAuthority> authorities;
+   private final UserReadDto user;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.authorities;
-    }
+   public UserDetailsDto(UserReadDto user) {
+      this.user = user;
+   }
 
-    @Override
-    public String getPassword() {
-        return this.password;
-    }
+   public UUID getUuid() {
+      return user.getUuid();
+   }
 
-    @Override
-    public String getUsername() {
-        return this.username;
-    }
+   public String getEmail() {
+      return user.getEmail();
+   }
+
+   @Override
+   public Collection<? extends GrantedAuthority> getAuthorities() {
+      return Collections.singleton(new SimpleGrantedAuthority(user.getRole().name()));
+   }
+
+   @Override
+   public String getPassword() {
+      return user.getPassword();
+   }
+
+   @Override
+   public String getUsername() {
+      return user.getUsername();
+   }
+
 }
