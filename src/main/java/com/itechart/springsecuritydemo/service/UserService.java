@@ -2,6 +2,7 @@ package com.itechart.springsecuritydemo.service;
 
 
 import com.itechart.springsecuritydemo.dto.UpdateUserRequest;
+import com.itechart.springsecuritydemo.dto.UserDetailsDto;
 import com.itechart.springsecuritydemo.dto.UserReadDto;
 import com.itechart.springsecuritydemo.dto.RegisterRequest;
 import com.itechart.springsecuritydemo.entity.Role;
@@ -54,7 +55,8 @@ public class UserService {
         user.setEmail(updateUserRequest.email());
         user.setPassword(passwordEncoder.encode(updateUserRequest.newPassword()));
         user.setUsername(updateUserRequest.username());
-        return UserReadMapper.INSTANCE.toDto(userRepository.save(user));
+        return new UserDetailsDto(
+                UserReadMapper.INSTANCE.toDto(userRepository.save(user))).getUser();
     }
 
     public boolean checkPassword(UpdateUserRequest updateUserRequest) {
