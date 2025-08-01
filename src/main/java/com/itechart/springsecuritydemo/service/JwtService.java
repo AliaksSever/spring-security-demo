@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,11 +17,14 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
 public class JwtService implements JwtRepository {
 
+    private final Logger logger = Logger.getLogger(JwtService.class.getName());
     private final SecretKey secretKey;
 
 
@@ -34,6 +38,7 @@ public class JwtService implements JwtRepository {
 
     @Override
     public String generateToken(Authentication authentication) {
+        logger.log(Level.INFO, "Authentication Object with name "+authentication.getName());
         String scope = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
@@ -49,6 +54,7 @@ public class JwtService implements JwtRepository {
 
     }
     public String extractUserName(String token) {
+        logger.log(Level.INFO, "Extract claims subject "+extractAllClaims(token).getSubject());
         return extractAllClaims(token).getSubject();
     }
 

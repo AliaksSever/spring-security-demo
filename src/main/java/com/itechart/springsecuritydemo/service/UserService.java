@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -46,17 +47,21 @@ public class UserService {
         ));
     }
 
+    @Transactional
+    public void delete(UUID uuid) {
+        userRepository.deleteByUuid(uuid);
+    }
+
     public boolean isExist(RegisterRequest request) {
         return userRepository.existsByEmail(request.email());
     }
 
+    @Transactional
     public UserReadDto updateProfile(UUID uuid, UpdateUserRequest updateUserRequest) {
         User user = userRepository.findByUuid(uuid).orElseThrow();
-        user.setEmail(updateUserRequest.email());
         user.setPassword(passwordEncoder.encode(updateUserRequest.newPassword()));
         user.setUsername(updateUserRequest.username());
-        return new UserDetailsDto(
-                UserReadMapper.INSTANCE.toDto(userRepository.save(user))).getUser();
+        return UserReadMapper.INSTANCE.toDto(userRepository.save(user));
     }
 
     public boolean checkPassword(UpdateUserRequest updateUserRequest) {

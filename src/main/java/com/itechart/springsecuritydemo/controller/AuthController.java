@@ -25,22 +25,22 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
+    public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request) {
         if (userService.isExist(request)) {
-            return ResponseEntity.badRequest().body(Map.of("message", "User with email " + request.email() + " already exists"));
+            return ResponseEntity.badRequest().body("User with email " + request.email() + " already exists");
         }
         userService.register(request);
-        return ResponseEntity.ok(Map.of("message", "User registered successfully"));
+        return ResponseEntity.ok("User registered successfully");
     }
 
     @PostMapping("/sign-in")
-    public ResponseEntity<?> signIn(@RequestBody SingInRequest singInRequest) {
+    public ResponseEntity<String> signIn(@RequestBody @Valid SingInRequest singInRequest) {
         String token;
         try {
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(singInRequest.username(), singInRequest.password()));
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(singInRequest.email(), singInRequest.password()));
              token = jwtService.generateToken(authentication);
         } catch (AuthenticationException exception){
-            return ResponseEntity.badRequest().body(Map.of("message", "User doesn't exist"));
+            return ResponseEntity.badRequest().body("User doesn't exist");
         }
         return ResponseEntity.ok(token);
     }

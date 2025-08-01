@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -40,30 +41,29 @@ public class UserController {
         return userService.findAll(pageable);
     }
 
-    @GetMapping("/{uuid}")
-    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    public UserReadDto findByUuid(@PathVariable UUID uuid) {
-        return userService.getUserByUuid(uuid)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with uuid " + uuid + " not found"));
-    }
-
     @GetMapping("/my_profile/{uuid}")
     @PreAuthorize("hasAnyAuthority('USER')")
-    public ResponseEntity<?> getProfile(@PathVariable UUID uuid){
-        return ResponseEntity.ok(userService.getUserByUuid(uuid));
+    public ResponseEntity<UserReadDto> getProfile(@PathVariable UUID uuid){
+        return ResponseEntity.ok(userService.getUserByUuid(uuid).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with uuid " + uuid + " not found")));
     }
 
     @PutMapping("/my_profile/{uuid}/update")
     @PreAuthorize("hasAnyAuthority('USER')")
-    public ResponseEntity<?> updateProfile(@PathVariable UUID uuid, @Valid @RequestBody UpdateUserRequest updateUserRequest){
+    public ResponseEntity<String> updateProfile(@PathVariable UUID uuid, @Valid @RequestBody UpdateUserRequest updateUserRequest){
         if(!userService.checkPassword(updateUserRequest)){
-            return ResponseEntity.badRequest().body(Map.of("message", "The passwords are not identity"));
+            return ResponseEntity.badRequest().body("The passwords are not identity");
         }
 
-
         UserReadDto userReadDto = userService.updateProfile(uuid, updateUserRequest);
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userReadDto.getUsername(),updateUserRequest.newPassword()));
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userReadDto.getEmail(),updateUserRequest.newPassword()));
         String token = jwtService.generateToken(authentication);
         return ResponseEntity.ok(token);
+    }
+
+    @DeleteMapping("/delete/{uuid}")
+    @PreAuthorize("hasAnyAuthority('SUPERVISOR', 'USER')")
+    public ResponseEntity<String> deleteUser(@PathVariable UUID uuid){
+        userService.delete(uuid);
+        return ResponseEntity.ok("User was successfully delete");
     }
 }
