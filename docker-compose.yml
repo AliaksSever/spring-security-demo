@@ -10,6 +10,9 @@ services:
       - "5435:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - app_net
+
   app:
     build:
       context: .
@@ -25,6 +28,46 @@ services:
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: pass
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+    networks:
+      - app_net
 
+  keycloak-db:
+    image: postgres:15
+    container_name: keycloak_postgres
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+    ports:
+      - "5433:5432"
+    volumes:
+      - keycloak_pgdata:/var/lib/postgresql/data
+    networks:
+      - keycloak_net
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.2
+    container_name: keycloak
+    command: start-dev
+    environment:
+      KC_DB: postgres
+      KC_DB_URL_HOST: keycloak-db
+      KC_DB_URL_DATABASE: keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloak
+      KC_HOSTNAME: localhost
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "9090:8080"
+    depends_on:
+      - keycloak-db
+    networks:
+      - keycloak_net
 volumes:
   pgdata:
+  keycloak_pgdata:
+
+networks:
+  app_net:
+  keycloak_net:
