@@ -30,6 +30,7 @@ services:
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
     networks:
       - app_net
+      - keycloak_net
 
   keycloak-db:
     image: postgres:15

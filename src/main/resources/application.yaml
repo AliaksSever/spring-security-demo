@@ -2,5 +2,22 @@ spring:
   application.name: spring-security-demo
   profiles:
     active: local
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            provider: keycloak
+            client-id: securityapp
+            client-secret: cdG7Ysz8WlLb1DCycg0qwg0WgKcZ6ao6
+            client-name: securityapp
+            authorization-grant-type: authorization_code
+            scope:
+              - openid
+              - profile
+              - email
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak:8080/realms/proselyte/protocol/openid-connect/certs
 jwt:
-  token: 3f8a9c7e2b1d4f6a8e7c9b0d1a2e3f4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a
+
