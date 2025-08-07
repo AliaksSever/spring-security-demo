@@ -33,6 +33,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration {
 
     private final CustomUserDetailsService customUserDetailsService;
@@ -41,17 +42,17 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                .authorizeHttpRequests(auth-> auth
+                .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/**", "/auth/*").permitAll()
                         .requestMatchers("/users/**").authenticated()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(jwt->jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
                 .build();
 
     }
 
-    private JwtAuthenticationConverter jwtAuthenticationConverter(){
+    private JwtAuthenticationConverter jwtAuthenticationConverter() {
         var converter = new JwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(new KeycloakJwtAuthenticationConverter());
         return converter;
@@ -60,17 +61,5 @@ public class SecurityConfiguration {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public AuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(customUserDetailsService);
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        return daoAuthenticationProvider;
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager() throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
     }
 }

@@ -17,6 +17,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.Principal;
+import java.util.Map;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -25,7 +27,6 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
-    private final AuthenticationManager authenticationManager;
 
     @GetMapping
     @PreAuthorize("hasAuthority('SUPERVISOR')")
@@ -38,21 +39,24 @@ public class UserController {
     }
 
     @GetMapping("/my_profile/{uuid}")
-    @PreAuthorize("hasAnyAuthority('USER')")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<UserReadDto> getProfile(@PathVariable UUID uuid){
         return ResponseEntity.ok(userService.getUserByUuid(uuid).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with uuid " + uuid + " not found")));
     }
-    @GetMapping("/users")
-    @PreAuthorize("hasAnyAuthority('USER', 'SUPERVISOR')")
-    public String helloPage(){
-        return "Hello!";
+    @GetMapping("/hello")
+    @PreAuthorize("hasAuthority('USER')")
+    public String helloPage(Principal principal){
+        System.out.println("Principal: " + principal);
+        System.out.println("Name: " + principal.getName());
+        return "Hello АААААААА, " + principal.getName();
     }
     @PutMapping("/my_profile/{uuid}/update")
-    @PreAuthorize("hasAnyAuthority('USER')")
-    public ResponseEntity<UserReadDto> updateProfile(@PathVariable UUID uuid, @Valid @RequestBody UpdateUserRequest updateUserRequest){
-        UserReadDto userReadDto = userService.updateProfile(uuid, updateUserRequest);
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userReadDto.getEmail(),updateUserRequest.newPassword()));
-       // String token = jwtService.generateToken(authentication);
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<?> updateProfile(@PathVariable UUID uuid, @Valid @RequestBody UpdateUserRequest updateUserRequest){
+        if(userService.checkPassword(updateUserRequest)){
+            return ResponseEntity.badRequest().body(Map.of("message", "Password dont match"));
+        }
+        UserReadDto userReadDto = userService.updateProfile(uuid, updateUserRequest);;
         return ResponseEntity.ok(userReadDto);
     }
 

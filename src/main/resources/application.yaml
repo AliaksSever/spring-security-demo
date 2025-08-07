@@ -4,18 +4,6 @@ spring:
     active: local
   security:
     oauth2:
-      client:
-        registration:
-          keycloak:
-            provider: keycloak
-            client-id: securityapp
-            client-secret: cdG7Ysz8WlLb1DCycg0qwg0WgKcZ6ao6
-            client-name: securityapp
-            authorization-grant-type: authorization_code
-            scope:
-              - openid
-              - profile
-              - email
       resourceserver:
         jwt:
           jwk-set-uri: http://keycloak:8080/realms/proselyte/protocol/openid-connect/certs

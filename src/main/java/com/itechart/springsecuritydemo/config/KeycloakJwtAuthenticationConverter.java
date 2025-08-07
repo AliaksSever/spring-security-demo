@@ -6,19 +6,23 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.lang.annotation.Annotation;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class KeycloakJwtAuthenticationConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
+
     @Override
-    public Collection<GrantedAuthority> convert(Jwt source) {
-        List<String> roles = source.getClaimAsStringList("roles");
-        if(roles==null){
+    public Collection<GrantedAuthority> convert(Jwt jwt) {
+        Object rolesClaim = jwt.getClaim("roles");
+
+        if (!(rolesClaim instanceof List<?> rolesList)) {
             return Collections.emptyList();
         }
-        return roles.stream().map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+
+        return rolesList.stream()
+                .filter(Objects::nonNull)
+                .map(Object::toString)
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toSet());
     }
 }

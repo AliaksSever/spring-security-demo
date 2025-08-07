@@ -25,6 +25,7 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     public Page<UserReadDto> findAll(Pageable pageable) {
