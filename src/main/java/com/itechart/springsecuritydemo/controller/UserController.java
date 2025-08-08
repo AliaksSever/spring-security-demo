@@ -48,7 +48,7 @@ public class UserController {
     public String helloPage(Principal principal){
         System.out.println("Principal: " + principal);
         System.out.println("Name: " + principal.getName());
-        return "Hello АААААААА, " + principal.getName();
+        return "Hello, " + principal.getName();
     }
     @PutMapping("/my_profile/{uuid}/update")
     @PreAuthorize("hasAuthority('USER')")

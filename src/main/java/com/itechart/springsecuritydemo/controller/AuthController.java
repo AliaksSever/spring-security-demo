@@ -28,8 +28,4 @@ public class AuthController {
         return ResponseEntity.ok("User registered successfully");
     }
 
-    @PostMapping("/sign-in")
-    public ResponseEntity<String> signIn(@RequestBody @Valid SingInRequest singInRequest) {
-        return ResponseEntity.ok("Succesfull sign in");
-    }
 }

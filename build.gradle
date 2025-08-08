@@ -35,7 +35,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.security:spring-security-oauth2-jose'
-
+    implementation 'org.keycloak:keycloak-admin-client:26.0.6'
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.liquibase:liquibase-core'

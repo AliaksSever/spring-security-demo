@@ -28,6 +28,8 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final KeycloakService keycloakService;
+
     public Page<UserReadDto> findAll(Pageable pageable) {
         return userRepository.findAll(pageable).map(UserReadMapper.INSTANCE::toDto);
     }
@@ -62,6 +64,7 @@ public class UserService {
         User user = userRepository.findByUuid(uuid).orElseThrow();
         user.setPassword(passwordEncoder.encode(updateUserRequest.newPassword()));
         user.setUsername(updateUserRequest.username());
+        keycloakService.updateKeycloakUser(uuid, updateUserRequest);
         return UserReadMapper.INSTANCE.toDto(userRepository.save(user));
     }
 
