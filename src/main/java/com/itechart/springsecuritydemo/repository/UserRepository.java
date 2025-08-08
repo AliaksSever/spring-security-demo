@@ -23,7 +23,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     void deleteByUuid(UUID uuid);
 
-
+    boolean existsUserByUuid(UUID uuid);
 
 
 }
