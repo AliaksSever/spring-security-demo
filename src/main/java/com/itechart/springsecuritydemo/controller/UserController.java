@@ -53,9 +53,6 @@ public class UserController {
     @PutMapping("/my_profile/{uuid}/update")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<?> updateProfile(@PathVariable UUID uuid, @Valid @RequestBody UpdateUserRequest updateUserRequest){
-        if(userService.checkPassword(updateUserRequest)){
-            return ResponseEntity.badRequest().body(Map.of("message", "Password dont match"));
-        }
         UserReadDto userReadDto = userService.updateProfile(uuid, updateUserRequest);;
         return ResponseEntity.ok(userReadDto);
     }
