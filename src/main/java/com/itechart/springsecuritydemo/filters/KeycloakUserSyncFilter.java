@@ -56,7 +56,6 @@ public class KeycloakUserSyncFilter extends OncePerRequestFilter {
                         .username(username)
                         .email(email)
                         .role(Role.valueOf(currentRole))
-                        .password("test123")
                         .build();
                 userRepository.save(user);
             }

@@ -24,7 +24,9 @@ public class User {
     private UUID uuid;
 
     private String username;
-    private String password;
+    @Column(name="phone")
+    private String phoneNumber;
+    private String city;
     private String email;
     @Enumerated(EnumType.STRING)
     private Role role;

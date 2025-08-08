@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS users (
     id BIGSERIAL PRIMARY KEY,
     uuid UUID NOT NULL UNIQUE DEFAULT gen_random_uuid(),
     username VARCHAR(64) NOT NULL UNIQUE,
+    phone VARCHAR(64),
+    city VARCHAR(64),
     email VARCHAR(64) NOT NULL,
-    password VARCHAR(255) NOT NULL,
     role VARCHAR(32) NOT NULL
-);
+    );

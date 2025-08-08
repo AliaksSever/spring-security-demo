@@ -20,8 +20,8 @@ public class UserReadDto {
     @JsonIgnore
     UUID uuid;
     String username;
-    @JsonIgnore
-    String password;
+    String phoneNumber;
+    String city;
     String email;
     Role role;
 
