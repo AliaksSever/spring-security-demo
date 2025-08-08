@@ -48,14 +48,11 @@ public class UserController {
     public String helloPage(Principal principal){
         System.out.println("Principal: " + principal);
         System.out.println("Name: " + principal.getName());
-        return "Hello АААААААА, " + principal.getName();
+        return "Hello, " + principal.getName();
     }
     @PutMapping("/my_profile/{uuid}/update")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<?> updateProfile(@PathVariable UUID uuid, @Valid @RequestBody UpdateUserRequest updateUserRequest){
-        if(userService.checkPassword(updateUserRequest)){
-            return ResponseEntity.badRequest().body(Map.of("message", "Password dont match"));
-        }
         UserReadDto userReadDto = userService.updateProfile(uuid, updateUserRequest);;
         return ResponseEntity.ok(userReadDto);
     }

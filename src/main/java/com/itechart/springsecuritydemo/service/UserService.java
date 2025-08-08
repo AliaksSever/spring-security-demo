@@ -2,7 +2,6 @@ package com.itechart.springsecuritydemo.service;
 
 
 import com.itechart.springsecuritydemo.dto.UpdateUserRequest;
-import com.itechart.springsecuritydemo.dto.UserDetailsDto;
 import com.itechart.springsecuritydemo.dto.UserReadDto;
 import com.itechart.springsecuritydemo.dto.RegisterRequest;
 import com.itechart.springsecuritydemo.entity.Role;
@@ -43,7 +42,6 @@ public class UserService {
                         .uuid(UUID.randomUUID())
                         .email(request.email())
                         .role(Role.USER)
-                        .password(passwordEncoder.encode(request.password()))
                         .build()
         ));
     }
@@ -60,12 +58,7 @@ public class UserService {
     @Transactional
     public UserReadDto updateProfile(UUID uuid, UpdateUserRequest updateUserRequest) {
         User user = userRepository.findByUuid(uuid).orElseThrow();
-        user.setPassword(passwordEncoder.encode(updateUserRequest.newPassword()));
         user.setUsername(updateUserRequest.username());
         return UserReadMapper.INSTANCE.toDto(userRepository.save(user));
-    }
-
-    public boolean checkPassword(UpdateUserRequest updateUserRequest) {
-        return updateUserRequest.newPassword().equals(updateUserRequest.confPassword());
     }
 }

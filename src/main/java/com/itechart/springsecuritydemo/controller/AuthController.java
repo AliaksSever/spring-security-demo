@@ -1,15 +1,10 @@
 package com.itechart.springsecuritydemo.controller;
 
 import com.itechart.springsecuritydemo.dto.RegisterRequest;
-import com.itechart.springsecuritydemo.dto.SingInRequest;
 import com.itechart.springsecuritydemo.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,10 +21,5 @@ public class AuthController {
         }
         userService.register(request);
         return ResponseEntity.ok("User registered successfully");
-    }
-
-    @PostMapping("/sign-in")
-    public ResponseEntity<String> signIn(@RequestBody @Valid SingInRequest singInRequest) {
-        return ResponseEntity.ok("Succesfull sign in");
     }
 }
