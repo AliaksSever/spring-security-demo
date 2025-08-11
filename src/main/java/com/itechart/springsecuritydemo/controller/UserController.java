@@ -29,7 +29,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('SUPERVISOR')")
+    @PreAuthorize("hasAuthority('ROLE_SUPERVISOR')")
     public Page<UserReadDto> findAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
@@ -39,26 +39,26 @@ public class UserController {
     }
 
     @GetMapping("/my_profile/{uuid}")
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity<UserReadDto> getProfile(@PathVariable UUID uuid){
         return ResponseEntity.ok(userService.getUserByUuid(uuid).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with uuid " + uuid + " not found")));
     }
     @GetMapping("/hello")
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public String helloPage(Principal principal){
         System.out.println("Principal: " + principal);
         System.out.println("Name: " + principal.getName());
         return "Hello, " + principal.getName();
     }
     @PutMapping("/my_profile/{uuid}/update")
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity<?> updateProfile(@PathVariable UUID uuid, @Valid @RequestBody UpdateUserRequest updateUserRequest){
         UserReadDto userReadDto = userService.updateProfile(uuid, updateUserRequest);;
         return ResponseEntity.ok(userReadDto);
     }
 
     @DeleteMapping("/delete/{uuid}")
-    @PreAuthorize("hasAnyAuthority('SUPERVISOR', 'USER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_SUPERVISOR', 'ROLE_USER')")
     public ResponseEntity<String> deleteUser(@PathVariable UUID uuid){
         userService.delete(uuid);
         return ResponseEntity.ok("User was successfully delete");

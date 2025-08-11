@@ -41,12 +41,10 @@ public class KeycloakUserSyncFilter extends OncePerRequestFilter {
             String email = jwt.getClaim("email");
             List<String> roles = jwt.getClaimAsStringList("roles");
 
-            String currentRole = null;
-            for (String role : roles) {
-                if (role.equals("SUPERVISOR") || role.equals("USER")) {
-                    currentRole = role;
-                }
-            }
+            String currentRole = roles.stream()
+                    .filter(role -> role.startsWith("ROLE_"))
+                    .findFirst()
+                    .orElse(null);
 
             UUID uuid = UUID.fromString(keycloakId);
 

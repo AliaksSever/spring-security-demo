@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,8 +23,6 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
-
-    private final PasswordEncoder passwordEncoder;
 
     private final KeycloakService keycloakService;
 
@@ -43,7 +40,7 @@ public class UserService {
                         .username(request.username())
                         .uuid(UUID.randomUUID())
                         .email(request.email())
-                        .role(Role.USER)
+                        .role(Role.ROLE_USER)
                         .build()
         ));
     }
@@ -60,7 +57,7 @@ public class UserService {
     @Transactional
     public UserReadDto updateProfile(UUID uuid, UpdateUserRequest updateUserRequest) {
         User user = userRepository.findByUuid(uuid).orElseThrow();
-        user.setUsername(updateUserRequest.username());
+        user.setEmail(updateUserRequest.email());
         keycloakService.updateKeycloakUser(uuid, updateUserRequest);
         return UserReadMapper.INSTANCE.toDto(userRepository.save(user));
     }
