@@ -48,6 +48,7 @@ public class UserService {
     @Transactional
     public void delete(UUID uuid) {
         userRepository.deleteByUuid(uuid);
+        keycloakService.deleteKeycloakUser(uuid);
     }
 
     public boolean isExist(RegisterRequest request) {
@@ -58,6 +59,8 @@ public class UserService {
     public UserReadDto updateProfile(UUID uuid, UpdateUserRequest updateUserRequest) {
         User user = userRepository.findByUuid(uuid).orElseThrow();
         user.setEmail(updateUserRequest.email());
+        user.setCity(updateUserRequest.city());
+        user.setPhoneNumber(updateUserRequest.phoneNumber());
         keycloakService.updateKeycloakUser(uuid, updateUserRequest);
         return UserReadMapper.INSTANCE.toDto(userRepository.save(user));
     }

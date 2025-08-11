@@ -25,7 +25,11 @@ public class KeycloakService {
         user.setEmail(updateUserRequest.email());
         userResource.update(user);
 
-        userResource.logout();
         System.out.println("Username and password updated, user logged out: {}" + uuid);
+    }
+
+    public void deleteKeycloakUser(UUID uuid){
+        UserResource userResource = keycloak.realm(keycloakProperties.getRealm()).users().get(String.valueOf(uuid));
+        userResource.remove();
     }
 }

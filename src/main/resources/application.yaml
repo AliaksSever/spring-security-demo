@@ -6,12 +6,12 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://keycloak:8080/realms/demo-realm2/protocol/openid-connect/certs
+          jwk-set-uri: http://keycloak:8080/realms/proselyte/protocol/openid-connect/certs
 jwt:
 
 keycloak:
-  realm: demo-realm2
+  realm: proselyte
   server-url: http://keycloak:8080
   user-sync-client:
     client-id: admin-client
-    client-secret: YO9hog8dTd89wkY5t7THgWUzrxX7byP4
+    client-secret: 9Mq6a6BHzUQBcuNQaPHgwMa8XkO4GZmB
