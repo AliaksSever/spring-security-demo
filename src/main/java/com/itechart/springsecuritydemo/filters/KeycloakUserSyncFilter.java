@@ -20,6 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,12 +42,10 @@ public class KeycloakUserSyncFilter extends OncePerRequestFilter {
             String email = jwt.getClaim("email");
             List<String> roles = jwt.getClaimAsStringList("roles");
 
-            String currentRole = null;
-            for (String role : roles) {
-                if (role.equals("SUPERVISOR") || role.equals("USER")) {
-                    currentRole = role;
-                }
-            }
+            String currentRole = roles.stream()
+                    .filter(role -> role.startsWith("ROLE_"))
+                    .findFirst()
+                    .orElse(null);
 
             UUID uuid = UUID.fromString(keycloakId);
 
