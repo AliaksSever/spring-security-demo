@@ -20,7 +20,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
