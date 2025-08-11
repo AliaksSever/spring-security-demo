@@ -21,10 +21,9 @@ public class KeycloakConfig {
         return KeycloakBuilder.builder()
                 .serverUrl(keycloakProperties.getServerUrl())
                 .realm(keycloakProperties.getRealm())
-                .clientId("postman-client2")
-                .username("adminuser")
-                .password("admin123")
-                .grantType(OAuth2Constants.PASSWORD)
+                .clientId(userSyncClient.getClientId())
+                .clientSecret(userSyncClient.getClientSecret())
+                .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
                 .build();
     }
 }
