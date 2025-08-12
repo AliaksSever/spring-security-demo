@@ -7,6 +7,7 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: http://keycloak:8080/realms/proselyte/protocol/openid-connect/certs
+
 jwt:
 
 keycloak:
@@ -15,3 +16,13 @@ keycloak:
   user-sync-client:
     client-id: admin-client
     client-secret: 9Mq6a6BHzUQBcuNQaPHgwMa8XkO4GZmB
+
+server:
+  port: 8081
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
