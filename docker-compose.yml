@@ -28,6 +28,10 @@ services:
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: pass
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+      KEYCLOAK_HOST: http://keycloak:8080
+      JWK_SET_URI: http://keycloak:8080/realms/demo-realm2/protocol/openid-connect/certs
+      USER_SYNC_CLIENT_ID: admin-client
+      USER_SYNC_CLIENT_SECRET: YO9hog8dTd89wkY5t7THgWUzrxX7byP4
     networks:
       - app_net
       - keycloak_net
