@@ -11,7 +11,7 @@ spring:
 jwt:
 
 keycloak:
-  realm: demo-realm2
+  realm: ${APPLICATION_REALM}
   server-url: ${KEYCLOAK_HOST:http://keycloak:8080}
   user-sync-client:
     client-id: ${USER_SYNC_CLIENT_ID}
