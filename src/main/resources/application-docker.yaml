@@ -22,3 +22,9 @@ keycloak:
   user-sync-client:
     client-id: ${USER_SYNC_CLIENT_ID}
     client-secret: ${USER_SYNC_CLIENT_SECRET}
+
+eureka:
+  client:
+    enabled: ${EUREKA_CLIENT_ENABLED:false}
+  service-url:
+    defaultZone: ${EUREKA_URL}
