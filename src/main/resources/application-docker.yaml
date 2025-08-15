@@ -26,5 +26,5 @@ keycloak:
 eureka:
   client:
     enabled: ${EUREKA_CLIENT_ENABLED:false}
-  service-url:
-    defaultZone: ${EUREKA_URL}
+    service-url:
+      defaultZone: ${EUREKA_URL}
