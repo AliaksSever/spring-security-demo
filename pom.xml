@@ -20,6 +20,7 @@
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <jjwt.version>0.11.5</jjwt.version>
         <spring.boot.version>3.5.4</spring.boot.version>
+        <spring.cloud.version>2025.0.0</spring.cloud.version>
     </properties>
 
     <dependencyManagement>
@@ -28,6 +29,13 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring.cloud.version}</version> <!-- или актуальную -->
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -137,6 +145,12 @@
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-launcher</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <!-- Eureka client -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
     </dependencies>
 
