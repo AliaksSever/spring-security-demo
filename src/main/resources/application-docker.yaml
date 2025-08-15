@@ -10,3 +10,8 @@ spring:
     properties.hibernate:
       show_sql: true
       format_sql: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${JWK_SET_URI}
