@@ -1,5 +1,5 @@
 spring:
-  application.name: spring-security-demo
+  application.name: profile-management-service
   profiles:
     active: local
   security:
