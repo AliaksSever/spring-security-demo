@@ -10,3 +10,15 @@ spring:
     properties.hibernate:
       show_sql: true
       format_sql: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak:8080/realms/proselyte/protocol/openid-connect/certs
+
+keycloak:
+  realm: proselyte
+  server-url: http://keycloak:8080
+  user-sync-client:
+    client-id: admin-client
+    client-secret: 9Mq6a6BHzUQBcuNQaPHgwMa8XkO4GZmB

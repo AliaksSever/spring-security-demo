@@ -1,17 +1,5 @@
 spring:
-  application.name: profile-management-service
+  application:
+    name: profile-management-service
   profiles:
     active: local
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          jwk-set-uri: http://keycloak:8080/realms/proselyte/protocol/openid-connect/certs
-jwt:
-
-keycloak:
-  realm: proselyte
-  server-url: http://keycloak:8080
-  user-sync-client:
-    client-id: admin-client
-    client-secret: 9Mq6a6BHzUQBcuNQaPHgwMa8XkO4GZmB
