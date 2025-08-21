@@ -28,7 +28,13 @@ services:
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: pass
       SPRING_JPA_HIBERNATE_DDL_AUTO: validate
-      JWK_SET_URI: ${JWK_SET_URI:-http://localhost:9090/realms/<realm-id>/protocol/openid-connect/certs}
+      JWK_SET_URI: ${JWK_SET_URI}
+      KEYCLOAK_HOST: http://keycloak:8080
+      APPLICATION_REALM: ${APPLICATION_REALM}
+      USER_SYNC_CLIENT_ID: ${USER_SYNC_CLIENT_ID}
+      USER_SYNC_CLIENT_SECRET: ${USER_SYNC_CLIENT_SECRET}
+      EUREKA_CLIENT_ENABLED: ${EUREKA_CLIENT_ENABLED:-false}
+      EUREKA_URL: ${EUREKA_URL:-http://service-discovery:8761/eureka}
     networks:
       - app_net
       - keycloak_net
