@@ -10,11 +10,18 @@ spring:
     properties.hibernate:
       show_sql: true
       format_sql: true
+  cloud:
+    config:
+      enabled: false
   security:
     oauth2:
       resourceserver:
         jwt:
           jwk-set-uri: http://keycloak:8080/realms/proselyte/protocol/openid-connect/certs
+
+eureka:
+  client:
+    enabled: false
 
 keycloak:
   realm: proselyte
