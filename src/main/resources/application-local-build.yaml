@@ -6,7 +6,23 @@ spring:
     password:
   liquibase:
     enabled: false
+  cloud:
+    config:
+      enabled: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://host:port/realms/realmName/protocol/openid-connect/certs
+
 
 eureka:
   client:
     enabled: false
+
+keycloak:
+  realm: realmId
+  server-url: http://host:port
+  user-sync-client:
+    client-id: clientId
+    client-secret: clientSecret
