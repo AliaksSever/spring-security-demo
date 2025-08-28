@@ -97,7 +97,6 @@
             <version>${mapstruct.version}</version>
             <scope>provided</scope>
         </dependency>
-
         <!-- JJWT -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
@@ -117,6 +116,7 @@
             <scope>runtime</scope>
         </dependency>
 
+
         <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -128,11 +128,7 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>test</scope>
-        </dependency>
+
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-launcher</artifactId>
