@@ -1,10 +1,10 @@
 package com.itechart.springsecuritydemo.controller;
 
-import com.itechart.springsecuritydemo.dto.UpdateUserRequest;
-import com.itechart.springsecuritydemo.dto.UserReadDto;
 import com.itechart.springsecuritydemo.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.dto.UpdateUserRequest;
+import org.example.dto.UserReadDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -40,7 +40,7 @@ public class UserController {
     }
 
     @GetMapping("/my_profile/{uuid}")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_SUPERVISOR')")
     public ResponseEntity<UserReadDto> getProfile(@PathVariable UUID uuid){
         return ResponseEntity.ok(userService.getUserByUuid(uuid).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with uuid " + uuid + " not found")));
     }

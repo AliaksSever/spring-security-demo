@@ -15,3 +15,5 @@ keycloak:
   user-sync-client:
     client-id: admin-client
     client-secret: 9Mq6a6BHzUQBcuNQaPHgwMa8XkO4GZmB
+
+

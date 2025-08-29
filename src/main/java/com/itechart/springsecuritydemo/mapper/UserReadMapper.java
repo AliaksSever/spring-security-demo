@@ -1,8 +1,8 @@
 package com.itechart.springsecuritydemo.mapper;
 
-import com.itechart.springsecuritydemo.dto.UserReadDto;
 import com.itechart.springsecuritydemo.entity.User;
 
+import org.example.dto.UserReadDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

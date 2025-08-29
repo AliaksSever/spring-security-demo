@@ -1,14 +1,14 @@
 package com.itechart.springsecuritydemo.service;
 
 
-import com.itechart.springsecuritydemo.dto.UpdateUserRequest;
-import com.itechart.springsecuritydemo.dto.UserReadDto;
 import com.itechart.springsecuritydemo.dto.RegisterRequest;
 import com.itechart.springsecuritydemo.entity.Role;
 import com.itechart.springsecuritydemo.entity.User;
 import com.itechart.springsecuritydemo.mapper.UserReadMapper;
 import com.itechart.springsecuritydemo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.example.dto.UpdateUserRequest;
+import org.example.dto.UserReadDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -40,7 +40,7 @@ public class UserService {
                         .username(request.username())
                         .uuid(UUID.randomUUID())
                         .email(request.email())
-                        .role(Role.ROLE_USER)
+                        .role(String.valueOf(Role.ROLE_USER))
                         .build()
         ));
     }
