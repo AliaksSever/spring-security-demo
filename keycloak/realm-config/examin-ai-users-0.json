@@ -1,0 +1,21 @@
+{
+  "realm" : "examin-ai",
+  "users" : [ {
+    "id" : "7381f360-b9a2-4fdb-af0c-612e71e7ba79",
+    "username" : "service-account-user-sync",
+    "emailVerified" : false,
+    "createdTimestamp" : 1755250173648,
+    "enabled" : true,
+    "totp" : false,
+    "serviceAccountClientId" : "user-sync",
+    "credentials" : [ ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-examin-ai" ],
+    "clientRoles" : {
+      "realm-management" : [ "manage-users", "manage-realm", "query-users", "view-users" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  } ]
+}

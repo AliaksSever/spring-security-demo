@@ -1,6 +1,6 @@
 package com.itechart.springsecuritydemo.controller;
 
-import com.itechart.springsecuritydemo.dto.RegisterRequest;
+import com.itechart.profileserviceapi.dto.RegisterRequest;
 import com.itechart.springsecuritydemo.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
