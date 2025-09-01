@@ -47,7 +47,7 @@ public class UserController implements UserClient{
 
     @Override
     @GetMapping("/hello")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_SUPERVISOR')")
     public ResponseEntity<String> helloPage(Principal principal){
         log.info("Principal: {}", principal);
         log.info("Name: {}", principal.getName());

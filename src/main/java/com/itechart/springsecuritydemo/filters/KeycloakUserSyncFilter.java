@@ -37,11 +37,10 @@ public class KeycloakUserSyncFilter extends OncePerRequestFilter {
             String email = jwt.getClaim("email");
             List<String> roles = jwt.getClaimAsStringList("roles");
 
-            String currentRole = roles.stream()
-                    .filter(role -> role.startsWith("ROLE_"))
-                    .findFirst()
-                    .orElse(null);
-
+            List<Role> currentRoles = roles.stream()
+                    .filter(role -> role!=null && role.startsWith("ROLE_"))
+                    .map(Role::valueOf)
+                    .toList();
             UUID uuid = UUID.fromString(keycloakId);
 
             if (!userRepository.existsUserByUuid(uuid)) {
@@ -49,7 +48,7 @@ public class KeycloakUserSyncFilter extends OncePerRequestFilter {
                         .uuid(uuid)
                         .username(username)
                         .email(email)
-                        .role(Role.valueOf(currentRole))
+                        .roles(currentRoles)
                         .build();
                 userRepository.save(user);
             }

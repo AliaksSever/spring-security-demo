@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -39,7 +40,7 @@ public class UserService {
                         .username(request.username())
                         .uuid(UUID.randomUUID())
                         .email(request.email())
-                        .role(Role.ROLE_USER)
+                        .roles(Collections.singletonList(Role.ROLE_USER))
                         .build()
         ));
     }
