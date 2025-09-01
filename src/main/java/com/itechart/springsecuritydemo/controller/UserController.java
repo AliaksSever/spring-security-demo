@@ -1,7 +1,7 @@
 package com.itechart.springsecuritydemo.controller;
 
 import  com.itechart.profileserviceapi.dto.UpdateUserRequest;
-import  com.itechart.profileserviceapi.dto.UserReadDto;
+import  com.itechart.profileserviceapi.dto.UserDto;
 import  com.itechart.profileserviceapi.api.UserClient;
 import com.itechart.springsecuritydemo.service.UserService;
 import jakarta.validation.Valid;
@@ -30,7 +30,7 @@ public class UserController implements UserClient{
     @Override
     @GetMapping
     @PreAuthorize("hasAuthority('ROLE_SUPERVISOR')")
-    public Page<UserReadDto> findAll(
+    public Page<UserDto> findAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
@@ -41,7 +41,7 @@ public class UserController implements UserClient{
     @Override
     @GetMapping("/my_profile/{uuid}")
     @PreAuthorize("hasAuthority('ROLE_USER')")
-    public ResponseEntity<UserReadDto> getProfile(@PathVariable UUID uuid){
+    public ResponseEntity<UserDto> getProfile(@PathVariable UUID uuid){
         return ResponseEntity.ok(userService.getUserByUuid(uuid).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with uuid " + uuid + " not found")));
     }
 
@@ -58,7 +58,7 @@ public class UserController implements UserClient{
     @PutMapping("/my_profile/{uuid}/update")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_SUPERVISOR')")
     public ResponseEntity<?> updateProfile(@PathVariable UUID uuid, @Valid @RequestBody UpdateUserRequest updateUserRequest){
-        UserReadDto userReadDto = userService.updateProfile(uuid, updateUserRequest);;
+        UserDto userReadDto = userService.updateProfile(uuid, updateUserRequest);;
         return ResponseEntity.ok(userReadDto);
     }
 

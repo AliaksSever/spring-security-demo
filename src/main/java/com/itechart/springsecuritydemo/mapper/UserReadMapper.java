@@ -1,6 +1,6 @@
 package com.itechart.springsecuritydemo.mapper;
 
-import com.itechart.profileserviceapi.dto.UserReadDto;
+import com.itechart.profileserviceapi.dto.UserDto;
 import com.itechart.springsecuritydemo.entity.User;
 
 import org.mapstruct.Mapper;
@@ -11,8 +11,8 @@ public interface UserReadMapper {
     UserReadMapper INSTANCE = Mappers.getMapper(UserReadMapper.class);
 
     @Mapping(target = "id")
-    UserReadDto toDto(User user);
+    UserDto toDto(User user);
 
     @Mapping(target = "id")
-    User toEntity(UserReadDto userDTO);
+    User toEntity(UserDto userDTO);
 }

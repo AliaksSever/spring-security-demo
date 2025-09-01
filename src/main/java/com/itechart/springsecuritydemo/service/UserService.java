@@ -1,7 +1,7 @@
 package com.itechart.springsecuritydemo.service;
 
 import com.itechart.profileserviceapi.dto.UpdateUserRequest;
-import com.itechart.profileserviceapi.dto.UserReadDto;
+import com.itechart.profileserviceapi.dto.UserDto;
 import com.itechart.profileserviceapi.dto.RegisterRequest;
 import com.itechart.profileserviceapi.enums.Role;
 import com.itechart.springsecuritydemo.entity.User;
@@ -25,17 +25,17 @@ public class UserService {
 
     private final KeycloakService keycloakService;
 
-    public Page<UserReadDto> findAll(Pageable pageable) {
+    public Page<UserDto> findAll(Pageable pageable) {
         return userRepository.findAll(pageable).map(UserReadMapper.INSTANCE::toDto);
     }
 
-    public Optional<UserReadDto> getUserByUuid(UUID uuid) {
+    public Optional<UserDto> getUserByUuid(UUID uuid) {
         return userRepository.findByUuid(uuid).map(UserReadMapper.INSTANCE::toDto);
     }
 
     public void register(RegisterRequest request) {
         userRepository.save(UserReadMapper.INSTANCE.toEntity(
-                UserReadDto.builder()
+                UserDto.builder()
                         .username(request.username())
                         .uuid(UUID.randomUUID())
                         .email(request.email())
@@ -55,7 +55,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserReadDto updateProfile(UUID uuid, UpdateUserRequest updateUserRequest) {
+    public UserDto updateProfile(UUID uuid, UpdateUserRequest updateUserRequest) {
         User user = userRepository.findByUuid(uuid).orElseThrow();
         user.setEmail(updateUserRequest.email());
         user.setCity(updateUserRequest.city());
