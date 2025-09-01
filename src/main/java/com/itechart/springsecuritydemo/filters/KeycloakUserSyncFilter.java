@@ -1,19 +1,15 @@
 package com.itechart.springsecuritydemo.filters;
 
-import com.itechart.springsecuritydemo.dto.RegisterRequest;
-import com.itechart.springsecuritydemo.entity.Role;
+import com.itechart.profileserviceapi.enums.Role;
 import com.itechart.springsecuritydemo.entity.User;
 import com.itechart.springsecuritydemo.repository.UserRepository;
-import com.itechart.springsecuritydemo.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;

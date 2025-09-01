@@ -1,5 +1,7 @@
 package com.itechart.springsecuritydemo.entity;
 
+import com.itechart.profileserviceapi.enums.Role;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

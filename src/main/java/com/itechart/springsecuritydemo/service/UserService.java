@@ -1,10 +1,9 @@
 package com.itechart.springsecuritydemo.service;
 
-
-import com.itechart.springsecuritydemo.dto.UpdateUserRequest;
-import com.itechart.springsecuritydemo.dto.UserReadDto;
-import com.itechart.springsecuritydemo.dto.RegisterRequest;
-import com.itechart.springsecuritydemo.entity.Role;
+import com.itechart.profileserviceapi.dto.UpdateUserRequest;
+import com.itechart.profileserviceapi.dto.UserReadDto;
+import com.itechart.profileserviceapi.dto.RegisterRequest;
+import com.itechart.profileserviceapi.enums.Role;
 import com.itechart.springsecuritydemo.entity.User;
 import com.itechart.springsecuritydemo.mapper.UserReadMapper;
 import com.itechart.springsecuritydemo.repository.UserRepository;
