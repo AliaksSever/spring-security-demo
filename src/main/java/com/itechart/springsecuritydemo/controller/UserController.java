@@ -2,7 +2,6 @@ package com.itechart.springsecuritydemo.controller;
 
 import  com.itechart.profileserviceapi.dto.UpdateUserRequest;
 import  com.itechart.profileserviceapi.dto.UserDto;
-import  com.itechart.profileserviceapi.api.UserClient;
 import com.itechart.springsecuritydemo.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,12 +21,11 @@ import java.util.UUID;
 @Log4j2
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users")
-public class UserController implements UserClient{
+@RequestMapping("api/v1/users")
+public class UserController{
 
     private final UserService userService;
 
-    @Override
     @GetMapping
     @PreAuthorize("hasAuthority('ROLE_SUPERVISOR')")
     public Page<UserDto> findAll(
@@ -38,14 +36,12 @@ public class UserController implements UserClient{
         return userService.findAll(pageable);
     }
 
-    @Override
-    @GetMapping("/my_profile/{uuid}")
+    @GetMapping("/{uuid}")
     @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity<UserDto> getProfile(@PathVariable UUID uuid){
         return ResponseEntity.ok(userService.getUserByUuid(uuid).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with uuid " + uuid + " not found")));
     }
 
-    @Override
     @GetMapping("/hello")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_SUPERVISOR')")
     public ResponseEntity<String> helloPage(Principal principal){
@@ -54,19 +50,17 @@ public class UserController implements UserClient{
         return ResponseEntity.ok("Hello, " + principal.getName());
     }
 
-    @Override
-    @PutMapping("/my_profile/{uuid}/update")
+    @PutMapping("/{uuid}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_SUPERVISOR')")
-    public ResponseEntity<?> updateProfile(@PathVariable UUID uuid, @Valid @RequestBody UpdateUserRequest updateUserRequest){
-        UserDto userReadDto = userService.updateProfile(uuid, updateUserRequest);;
-        return ResponseEntity.ok(userReadDto);
+    public ResponseEntity<UserDto> updateProfile(@PathVariable UUID uuid, @Valid @RequestBody UpdateUserRequest updateUserRequest){
+        UserDto userDto = userService.updateProfile(uuid, updateUserRequest);;
+        return ResponseEntity.ok(userDto);
     }
 
-    @Override
-    @DeleteMapping("/delete/{uuid}")
+    @DeleteMapping("/{uuid}")
     @PreAuthorize("hasAnyAuthority('ROLE_SUPERVISOR', 'ROLE_USER')")
-    public ResponseEntity<String> deleteUser(@PathVariable UUID uuid){
+    public void deleteUser(@PathVariable UUID uuid){
         userService.delete(uuid);
-        return ResponseEntity.ok("User was successfully delete");
+        log.info("User - {} - was successfully deleted", uuid);
     }
 }
