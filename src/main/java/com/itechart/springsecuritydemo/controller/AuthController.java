@@ -1,7 +1,7 @@
 package com.itechart.springsecuritydemo.controller;
 
 import com.itechart.profileserviceapi.dto.RegisterRequest;
-import com.itechart.springsecuritydemo.service.UserService;
+import com.itechart.springsecuritydemo.service.impl.UserServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request) {

@@ -5,18 +5,16 @@ import com.itechart.profileserviceapi.dto.CheckRoleRequest;
 import  com.itechart.profileserviceapi.dto.UpdateUserRequest;
 import  com.itechart.profileserviceapi.dto.UserDto;
 import com.itechart.springsecuritydemo.exception.UserNotFoundException;
-import com.itechart.springsecuritydemo.service.UserService;
+import com.itechart.springsecuritydemo.service.impl.UserServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.util.List;
@@ -28,7 +26,7 @@ import java.util.UUID;
 @RequestMapping("api/v1/users")
 public class UserController{
 
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
     @GetMapping
     @PreAuthorize("hasAuthority('ROLE_SUPERVISOR')")
