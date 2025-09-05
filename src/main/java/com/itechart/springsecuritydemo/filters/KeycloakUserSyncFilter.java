@@ -17,7 +17,9 @@ import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -37,10 +39,10 @@ public class KeycloakUserSyncFilter extends OncePerRequestFilter {
             String email = jwt.getClaim("email");
             List<String> roles = jwt.getClaimAsStringList("roles");
 
-            List<Role> currentRoles = roles.stream()
+            Set<Role> currentRoles = roles.stream()
                     .filter(role -> role!=null && role.startsWith("ROLE_"))
                     .map(Role::valueOf)
-                    .toList();
+                    .collect(Collectors.toSet());
             UUID uuid = UUID.fromString(keycloakId);
 
             if (!userRepository.existsUserByUuid(uuid)&& !userRepository.existsUserByUsername(username)) {

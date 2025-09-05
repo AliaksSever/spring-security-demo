@@ -40,4 +40,13 @@ public class KeycloakServiceImpl implements KeycloakService {
                 .roles().get(newRoleName).toRepresentation();
         userResource.roles().realmLevel().add(List.of(role));
     }
+
+    @Override
+    public void deleteUserRole(UUID uuid, String role) {
+        UserResource userResource = keycloak.realm(keycloakProperties.getRealm())
+                .users().get(uuid.toString());
+        RoleRepresentation currRole = keycloak.realm(keycloakProperties.getRealm())
+                .roles().get(role).toRepresentation();
+        userResource.roles().realmLevel().remove(List.of(currRole));
+    }
 }

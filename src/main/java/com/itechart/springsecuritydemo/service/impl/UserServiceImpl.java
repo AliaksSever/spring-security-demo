@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService, UtilityUserService {
                         .username(request.username())
                         .uuid(UUID.randomUUID())
                         .email(request.email())
-                        .roles(Collections.singletonList(Role.ROLE_USER))
+                        .roles((Set<Role>) Collections.singletonList(Role.ROLE_USER))
                         .build()
         ));
     }
@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService, UtilityUserService {
         List<UserDto> newUsers = new ArrayList<>();
         for (UserDto userReadDto : users) {
             User user = UserReadMapper.INSTANCE.toEntity(userReadDto);
-            List<Role> roles = user.getRoles();
+            Set<Role> roles = user.getRoles();
             roles.add(Role.valueOf(role));
             user.setRoles(roles);
             userRepository.save(user);
@@ -92,6 +92,31 @@ public class UserServiceImpl implements UserService, UtilityUserService {
             userRepository.findByUuid(user.getUuid())
                     .map(UserReadMapper.INSTANCE::toDto)
                     .ifPresent(newUsers::add);
+        }
+        if(newUsers.isEmpty()){
+            return users;
+        }
+        return newUsers;
+    }
+
+    @Override
+    public List<UserDto> deleteRole(List<UserDto> users, String role) {
+        List<UserDto> newUsers = new ArrayList<>();
+        for (UserDto userReadDto : users) {
+            if(checkRole(userReadDto.getUuid(), role)){
+                User user = UserReadMapper.INSTANCE.toEntity(userReadDto);
+                Set<Role> roles = user.getRoles();
+                roles.remove(Role.valueOf(role));
+                user.setRoles(roles);
+                userRepository.save(user);
+                keycloakService.deleteUserRole(user.getUuid(), role);
+                userRepository.findByUuid(user.getUuid())
+                        .map(UserReadMapper.INSTANCE::toDto)
+                        .ifPresent(newUsers::add);
+            }
+        }
+        if(newUsers.isEmpty()){
+            return users;
         }
         return newUsers;
     }

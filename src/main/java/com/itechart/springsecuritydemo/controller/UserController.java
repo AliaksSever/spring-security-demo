@@ -1,9 +1,6 @@
 package com.itechart.springsecuritydemo.controller;
 
-import com.itechart.profileserviceapi.dto.AssignRoleRequest;
-import com.itechart.profileserviceapi.dto.CheckRoleRequest;
-import  com.itechart.profileserviceapi.dto.UpdateUserRequest;
-import  com.itechart.profileserviceapi.dto.UserDto;
+import com.itechart.profileserviceapi.dto.*;
 import com.itechart.springsecuritydemo.exception.UserNotFoundException;
 import com.itechart.springsecuritydemo.service.impl.UserServiceImpl;
 import jakarta.validation.Valid;
@@ -76,8 +73,14 @@ public class UserController{
     @PreAuthorize("hasAuthority('ROLE_SUPERVISOR')")
     public List<UserDto> assignRoles(@RequestBody AssignRoleRequest assignRoleRequest) {
         List<UserDto> users = userService.getExistingUsers(assignRoleRequest.uuids());
-
         return ResponseEntity.ok(userService.assignRole(users, String.valueOf(assignRoleRequest.role()))).getBody();
+    }
+
+    @PutMapping("/deleteRole")
+    @PreAuthorize("hasAuthority('ROLE_SUPERVISOR')")
+    public List<UserDto> deleteRole(@RequestBody DeleteRoleRequest deleteRoleRequest){
+        List<UserDto> users = userService.getExistingUsers(deleteRoleRequest.uuids());
+        return ResponseEntity.ok(userService.deleteRole(users, String.valueOf(deleteRoleRequest.role()))).getBody();
     }
 
 }

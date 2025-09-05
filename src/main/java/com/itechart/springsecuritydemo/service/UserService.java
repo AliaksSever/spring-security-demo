@@ -17,4 +17,5 @@ public interface UserService {
     void delete(UUID uuid);
     UserDto updateProfile(UUID uuid, UpdateUserRequest updateUserRequest);
     List<UserDto> assignRole(List<UserDto> users, String role);
+    List<UserDto> deleteRole(List<UserDto> users, String role);
 }
