@@ -1,5 +1,6 @@
 package com.itechart.springsecuritydemo.controller;
 
+import com.itechart.profileserviceapi.dto.CheckRoleRequest;
 import  com.itechart.profileserviceapi.dto.UpdateUserRequest;
 import  com.itechart.profileserviceapi.dto.UserDto;
 import com.itechart.springsecuritydemo.service.UserService;
@@ -62,5 +63,11 @@ public class UserController{
     public void deleteUser(@PathVariable UUID uuid){
         userService.delete(uuid);
         log.info("User - {} - was successfully deleted", uuid);
+    }
+
+    @PostMapping("/checkRole")
+    @PreAuthorize("hasAuthority('ROLE_SUPERVISOR')")
+    public ResponseEntity<Boolean> checkUsersRole(@RequestBody CheckRoleRequest checkRoleRequest){
+        return ResponseEntity.ok(userService.checkRole(checkRoleRequest.uuid(), checkRoleRequest.role()));
     }
 }

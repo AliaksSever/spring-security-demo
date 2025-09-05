@@ -64,4 +64,10 @@ public class UserService {
         keycloakService.updateKeycloakUser(uuid, updateUserRequest);
         return UserReadMapper.INSTANCE.toDto(userRepository.save(user));
     }
+    public boolean checkRole(UUID uuid, String role){
+        return userRepository.findByUuid(uuid)
+                .map(user -> user.getRoles().contains(Role.valueOf(role)))
+                .orElse(false);
+
+    }
 }

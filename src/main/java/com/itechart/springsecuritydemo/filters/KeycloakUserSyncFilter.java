@@ -43,7 +43,7 @@ public class KeycloakUserSyncFilter extends OncePerRequestFilter {
                     .toList();
             UUID uuid = UUID.fromString(keycloakId);
 
-            if (!userRepository.existsUserByUuid(uuid)) {
+            if (!userRepository.existsUserByUuid(uuid)&& !userRepository.existsUserByUsername(username)) {
                 User user = User.builder()
                         .uuid(uuid)
                         .username(username)
