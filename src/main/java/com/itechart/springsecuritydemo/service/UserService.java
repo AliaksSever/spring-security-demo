@@ -5,6 +5,7 @@ import com.itechart.profileserviceapi.dto.UserDto;
 import com.itechart.profileserviceapi.dto.RegisterRequest;
 import com.itechart.profileserviceapi.enums.Role;
 import com.itechart.springsecuritydemo.entity.User;
+import com.itechart.springsecuritydemo.exception.UserNotFoundException;
 import com.itechart.springsecuritydemo.mapper.UserReadMapper;
 import com.itechart.springsecuritydemo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +30,8 @@ public class UserService {
     }
 
     public Optional<UserDto> getUserByUuid(UUID uuid) {
-        return userRepository.findByUuid(uuid).map(UserReadMapper.INSTANCE::toDto);
+        return userRepository.findByUuid(uuid)
+                .map(UserReadMapper.INSTANCE::toDto);
     }
 
     public void register(RegisterRequest request) {
@@ -64,10 +64,33 @@ public class UserService {
         keycloakService.updateKeycloakUser(uuid, updateUserRequest);
         return UserReadMapper.INSTANCE.toDto(userRepository.save(user));
     }
-    public boolean checkRole(UUID uuid, String role){
+
+    public boolean checkRole(UUID uuid, String role) {
         return userRepository.findByUuid(uuid)
                 .map(user -> user.getRoles().contains(Role.valueOf(role)))
                 .orElse(false);
+    }
 
+    public List<UserDto> getExistingUsers(List<UUID> uuids) {
+        return uuids.stream()
+                .map(uuid -> getUserByUuid(uuid)
+                        .orElseThrow(() -> new UserNotFoundException("User with uuid is not found".formatted(uuid))))
+                .toList();
+    }
+
+    public List<UserDto> assignRole(List<UserDto> users, String role) {
+        List<UserDto> newUsers = new ArrayList<>();
+        for (UserDto userReadDto : users) {
+            User user = UserReadMapper.INSTANCE.toEntity(userReadDto);
+            List<Role> roles = user.getRoles();
+            roles.add(Role.valueOf(role));
+            user.setRoles(roles);
+            userRepository.save(user);
+            keycloakService.updateUserRole(user.getUuid(), role);
+            userRepository.findByUuid(user.getUuid())
+                    .map(UserReadMapper.INSTANCE::toDto)
+                    .ifPresent(newUsers::add);
+        }
+        return newUsers;
     }
 }

@@ -1,8 +1,10 @@
 package com.itechart.springsecuritydemo.controller;
 
+import com.itechart.profileserviceapi.dto.AssignRoleRequest;
 import com.itechart.profileserviceapi.dto.CheckRoleRequest;
 import  com.itechart.profileserviceapi.dto.UpdateUserRequest;
 import  com.itechart.profileserviceapi.dto.UserDto;
+import com.itechart.springsecuritydemo.exception.UserNotFoundException;
 import com.itechart.springsecuritydemo.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.UUID;
 
 @Log4j2
@@ -39,8 +42,9 @@ public class UserController{
 
     @GetMapping("/{uuid}")
     @PreAuthorize("hasAuthority('ROLE_USER')")
-    public ResponseEntity<UserDto> getProfile(@PathVariable UUID uuid){
-        return ResponseEntity.ok(userService.getUserByUuid(uuid).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with uuid " + uuid + " not found")));
+    public ResponseEntity<UserDto> findUserByUuid(@PathVariable UUID uuid){
+        return ResponseEntity.ok(userService.getUserByUuid(uuid).orElseThrow(()->
+                new UserNotFoundException(("User with uuid is not found".formatted(uuid)))));
     }
 
     @GetMapping("/hello")
@@ -51,14 +55,14 @@ public class UserController{
         return ResponseEntity.ok("Hello, " + principal.getName());
     }
 
-    @PutMapping("/{uuid}")
+    @PutMapping("update/{uuid}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_SUPERVISOR')")
     public ResponseEntity<UserDto> updateProfile(@PathVariable UUID uuid, @Valid @RequestBody UpdateUserRequest updateUserRequest){
         UserDto userDto = userService.updateProfile(uuid, updateUserRequest);;
         return ResponseEntity.ok(userDto);
     }
 
-    @DeleteMapping("/{uuid}")
+    @DeleteMapping("delete/{uuid}")
     @PreAuthorize("hasAnyAuthority('ROLE_SUPERVISOR', 'ROLE_USER')")
     public void deleteUser(@PathVariable UUID uuid){
         userService.delete(uuid);
@@ -70,4 +74,12 @@ public class UserController{
     public ResponseEntity<Boolean> checkUsersRole(@RequestBody CheckRoleRequest checkRoleRequest){
         return ResponseEntity.ok(userService.checkRole(checkRoleRequest.uuid(), checkRoleRequest.role()));
     }
+    @PutMapping("/assign")
+    @PreAuthorize("hasAuthority('ROLE_SUPERVISOR')")
+    public List<UserDto> assignRoles(@RequestBody AssignRoleRequest assignRoleRequest) {
+        List<UserDto> users = userService.getExistingUsers(assignRoleRequest.uuids());
+
+        return ResponseEntity.ok(userService.assignRole(users, String.valueOf(assignRoleRequest.role()))).getBody();
+    }
+
 }
