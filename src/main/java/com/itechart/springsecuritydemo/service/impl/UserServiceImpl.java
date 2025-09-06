@@ -3,6 +3,7 @@ package com.itechart.springsecuritydemo.service.impl;
 import com.itechart.profileserviceapi.dto.UpdateUserRequest;
 import com.itechart.profileserviceapi.dto.UserDto;
 import com.itechart.profileserviceapi.dto.RegisterRequest;
+import com.itechart.profileserviceapi.dto.UserIdsRequest;
 import com.itechart.profileserviceapi.enums.Role;
 import com.itechart.springsecuritydemo.entity.User;
 import com.itechart.springsecuritydemo.exception.UserNotFoundException;
@@ -93,7 +94,7 @@ public class UserServiceImpl implements UserService, UtilityUserService {
                     .map(UserReadMapper.INSTANCE::toDto)
                     .ifPresent(newUsers::add);
         }
-        if(newUsers.isEmpty()){
+        if (newUsers.isEmpty()) {
             return users;
         }
         return newUsers;
@@ -103,7 +104,7 @@ public class UserServiceImpl implements UserService, UtilityUserService {
     public List<UserDto> deleteRole(List<UserDto> users, String role) {
         List<UserDto> newUsers = new ArrayList<>();
         for (UserDto userReadDto : users) {
-            if(checkRole(userReadDto.getUuid(), role)){
+            if (checkRole(userReadDto.getUuid(), role)) {
                 User user = UserReadMapper.INSTANCE.toEntity(userReadDto);
                 Set<Role> roles = user.getRoles();
                 roles.remove(Role.valueOf(role));
@@ -115,9 +116,11 @@ public class UserServiceImpl implements UserService, UtilityUserService {
                         .ifPresent(newUsers::add);
             }
         }
-        if(newUsers.isEmpty()){
+        if (newUsers.isEmpty()) {
             return users;
         }
         return newUsers;
     }
 }
+
+
