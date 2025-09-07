@@ -83,4 +83,10 @@ public class UserController{
         return ResponseEntity.ok(userService.deleteRole(users, String.valueOf(deleteRoleRequest.role()))).getBody();
     }
 
+    @PostMapping("/users/bulk")
+    public ResponseEntity<List<UserDto>> getUsersById(@RequestBody UserIdsRequest request){
+        List<UserDto> existingUsers = userService.getExistingUsers(request.userIds());
+        return ResponseEntity.ok(existingUsers);
+    }
+
 }
