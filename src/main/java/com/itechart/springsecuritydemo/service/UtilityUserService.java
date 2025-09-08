@@ -5,6 +5,8 @@ import com.itechart.profileserviceapi.dto.UserDto;
 import com.itechart.profileserviceapi.enums.Role;
 import org.springframework.data.domain.Page;
 
+import com.itechart.profileserviceapi.dto.UserIdsRequest;
+
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;

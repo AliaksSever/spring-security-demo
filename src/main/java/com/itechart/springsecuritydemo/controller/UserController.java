@@ -91,4 +91,10 @@ public class UserController {
     }
 
 
+    @PostMapping("/bulk")
+    public ResponseEntity<List<UserDto>> getUsersById(@RequestBody UserIdsRequest request){
+        List<UserDto> existingUsers = userService.getExistingUsers(request.userIds());
+        return ResponseEntity.ok(existingUsers);
+    }
+
 }
