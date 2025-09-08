@@ -1,9 +1,13 @@
 package com.itechart.springsecuritydemo.repository;
 
+import com.itechart.profileserviceapi.enums.Role;
 import com.itechart.springsecuritydemo.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +21,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUuid(UUID uuid);
 
     Optional<User> findByUsername(String username);
+
     boolean existsByEmail(String email);
 
     Optional<User> findUserByEmail(String email);
@@ -26,6 +31,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsUserByUuid(UUID uuid);
 
     boolean existsUserByUsername(String username);
+
+    Page<User> findDistinctByRolesIn(Set<Role> roles, Pageable pageable);
 
     List<User> findAllByIdIn(Collection<Long> ids);
 
