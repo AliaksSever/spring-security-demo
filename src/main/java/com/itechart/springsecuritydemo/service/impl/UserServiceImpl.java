@@ -12,6 +12,7 @@ import com.itechart.springsecuritydemo.service.UserService;
 import com.itechart.springsecuritydemo.service.UtilityUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import org.springframework.stereotype.Service;
@@ -119,5 +120,11 @@ public class UserServiceImpl implements UserService, UtilityUserService {
             return users;
         }
         return newUsers;
+    }
+
+    @Override
+    public Page<UserDto> findUserByRoles(Set<Role> roles, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+       return userRepository.findDistinctByRolesIn(roles, pageable).map(UserReadMapper.INSTANCE::toDto);
     }
 }

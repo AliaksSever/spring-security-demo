@@ -21,7 +21,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/users")
-public class UserController{
+public class UserController {
 
     private final UserServiceImpl userService;
 
@@ -37,14 +37,14 @@ public class UserController{
 
     @GetMapping("/{uuid}")
     @PreAuthorize("hasAuthority('ROLE_USER')")
-    public ResponseEntity<UserDto> findUserByUuid(@PathVariable UUID uuid){
-        return ResponseEntity.ok(userService.getUserByUuid(uuid).orElseThrow(()->
+    public ResponseEntity<UserDto> findUserByUuid(@PathVariable UUID uuid) {
+        return ResponseEntity.ok(userService.getUserByUuid(uuid).orElseThrow(() ->
                 new UserNotFoundException(("User with uuid is not found".formatted(uuid)))));
     }
 
     @GetMapping("/hello")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_SUPERVISOR')")
-    public ResponseEntity<String> helloPage(Principal principal){
+    public ResponseEntity<String> helloPage(Principal principal) {
         log.info("Principal: {}", principal);
         log.info("Name: {}", principal.getName());
         return ResponseEntity.ok("Hello, " + principal.getName());
@@ -52,23 +52,25 @@ public class UserController{
 
     @PutMapping("update/{uuid}")
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_SUPERVISOR')")
-    public ResponseEntity<UserDto> updateProfile(@PathVariable UUID uuid, @Valid @RequestBody UpdateUserRequest updateUserRequest){
-        UserDto userDto = userService.updateProfile(uuid, updateUserRequest);;
+    public ResponseEntity<UserDto> updateProfile(@PathVariable UUID uuid, @Valid @RequestBody UpdateUserRequest updateUserRequest) {
+        UserDto userDto = userService.updateProfile(uuid, updateUserRequest);
+        ;
         return ResponseEntity.ok(userDto);
     }
 
     @DeleteMapping("delete/{uuid}")
     @PreAuthorize("hasAnyAuthority('ROLE_SUPERVISOR', 'ROLE_USER')")
-    public void deleteUser(@PathVariable UUID uuid){
+    public void deleteUser(@PathVariable UUID uuid) {
         userService.delete(uuid);
         log.info("User - {} - was successfully deleted", uuid);
     }
 
     @PostMapping("/checkRole")
     @PreAuthorize("hasAuthority('ROLE_SUPERVISOR')")
-    public ResponseEntity<Boolean> checkUsersRole(@RequestBody CheckRoleRequest checkRoleRequest){
+    public ResponseEntity<Boolean> checkUsersRole(@RequestBody CheckRoleRequest checkRoleRequest) {
         return ResponseEntity.ok(userService.checkRole(checkRoleRequest.uuid(), checkRoleRequest.role()));
     }
+
     @PutMapping("/assign")
     @PreAuthorize("hasAuthority('ROLE_SUPERVISOR')")
     public List<UserDto> assignRoles(@RequestBody AssignRoleRequest assignRoleRequest) {
@@ -78,9 +80,15 @@ public class UserController{
 
     @PutMapping("/deleteRole")
     @PreAuthorize("hasAuthority('ROLE_SUPERVISOR')")
-    public List<UserDto> deleteRole(@RequestBody DeleteRoleRequest deleteRoleRequest){
+    public List<UserDto> deleteRole(@RequestBody DeleteRoleRequest deleteRoleRequest) {
         List<UserDto> users = userService.getExistingUsers(deleteRoleRequest.uuids());
         return ResponseEntity.ok(userService.deleteRole(users, String.valueOf(deleteRoleRequest.role()))).getBody();
     }
+
+    @PostMapping("/findByRole")
+    public ResponseEntity<Page<UserDto>> findByRoles(@RequestBody FindUsersByRolesRequest request) {
+        return ResponseEntity.ok(userService.findUserByRoles(request.roles(), request.page(), request.size()));
+    }
+
 
 }
