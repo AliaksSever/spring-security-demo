@@ -18,6 +18,14 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "users")
+@NamedEntityGraphs(
+        @NamedEntityGraph(
+                name = "User.withRoles",
+                attributeNodes = {
+                        @NamedAttributeNode("roles")
+                }
+        )
+)
 public class User {
 
     @Id
@@ -33,7 +41,7 @@ public class User {
     private String city;
     private String email;
 
-    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = Role.class)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     private Set<Role> roles;
