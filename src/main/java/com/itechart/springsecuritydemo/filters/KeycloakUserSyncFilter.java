@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -22,6 +23,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class KeycloakUserSyncFilter extends OncePerRequestFilter {
@@ -35,6 +37,8 @@ public class KeycloakUserSyncFilter extends OncePerRequestFilter {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication instanceof JwtAuthenticationToken jwtAuth) {
+            log.info("KeycloakUserSyncFilter been triggered");
+
             Jwt jwt = jwtAuth.getToken();
             String keycloakId = jwt.getSubject();
             String username = jwt.getClaim("preferred_username");
@@ -80,6 +84,8 @@ public class KeycloakUserSyncFilter extends OncePerRequestFilter {
                         userRepository.save(newUser);
                     }
             );
+
+            log.info("KeycloakUserSyncFilter: Keycloak user synchronized");
         }
         filterChain.doFilter(request, response);
     }

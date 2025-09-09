@@ -4,7 +4,10 @@ import com.itechart.profileserviceapi.enums.Role;
 import com.itechart.springsecuritydemo.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -18,7 +21,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findAll();
 
-    Optional<User> findByUuid(UUID uuid);
+    @Query("SELECT u FROM User u WHERE u.uuid = :uuid")
+    @EntityGraph(value="User.withRoles", type = EntityGraph.EntityGraphType.LOAD)
+    Optional<User> findByUuidWithRoles(@Param("uuid") UUID uuid);
+
+    default Optional<User> findByUuid(UUID uuid) {
+        return findByUuidWithRoles(uuid);
+    }
 
     Optional<User> findByUsername(String username);
 
@@ -32,9 +41,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsUserByUsername(String username);
 
+    @EntityGraph(value="User.withRoles", type = EntityGraph.EntityGraphType.LOAD)
     Page<User> findDistinctByRolesIn(Set<Role> roles, Pageable pageable);
 
     List<User> findAllByIdIn(Collection<Long> ids);
 
+    @EntityGraph(value="User.withRoles", type = EntityGraph.EntityGraphType.LOAD)
     List<User> findAllByUuidIn(Collection<UUID> uuids);
 }
