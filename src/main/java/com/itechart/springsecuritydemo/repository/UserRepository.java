@@ -41,9 +41,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsUserByUsername(String username);
 
+    @EntityGraph(value="User.withRoles", type = EntityGraph.EntityGraphType.LOAD)
     Page<User> findDistinctByRolesIn(Set<Role> roles, Pageable pageable);
 
     List<User> findAllByIdIn(Collection<Long> ids);
 
+    @EntityGraph(value="User.withRoles", type = EntityGraph.EntityGraphType.LOAD)
     List<User> findAllByUuidIn(Collection<UUID> uuids);
 }
