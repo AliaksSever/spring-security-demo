@@ -18,6 +18,14 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "users")
+@NamedEntityGraphs({
+        @NamedEntityGraph(
+                name = "User.withRoles",
+                attributeNodes = {
+                        @NamedAttributeNode("roles")
+                }
+        )
+})
 public class User {
 
     @Id

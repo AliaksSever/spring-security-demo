@@ -76,10 +76,8 @@ public class UserServiceImpl implements UserService, UtilityUserService {
     }
 
     public List<UserDto> getExistingUsers(List<UUID> uuids) {
-        return uuids.stream()
-                .map(uuid -> getUserByUuid(uuid)
-                        .orElseThrow(() -> new UserNotFoundException("User with uuid is not found".formatted(uuid))))
-                .toList();
+        List<User> foundUsers = userRepository.findAllByUuidIn(uuids);
+        return foundUsers.stream().map(UserReadMapper.INSTANCE::toDto).toList();
     }
 
     public List<UserDto> assignRole(List<UserDto> users, String role) {
