@@ -1,3 +1,87 @@
+#services:
+#  db:
+#    image: postgres
+#    container_name: postgres_db
+#    environment:
+#      POSTGRES_DB: mydb
+#      POSTGRES_USER: user
+#      POSTGRES_PASSWORD: pass
+#    ports:
+#      - "5435:5432"
+#    volumes:
+#      - pgdata:/var/lib/postgresql/data
+#    networks:
+#      - app_net
+#
+#  app:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    container_name: security-app
+#    depends_on:
+#      - db
+#    ports:
+#      - "8081:8080"
+#    environment:
+#      SPRING_PROFILES_ACTIVE: docker
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/mydb
+#      SPRING_DATASOURCE_USERNAME: user
+#      SPRING_DATASOURCE_PASSWORD: pass
+#      SPRING_JPA_HIBERNATE_DDL_AUTO: validate
+#      JWK_SET_URI: ${JWK_SET_URI}
+#      KEYCLOAK_HOST: http://keycloak:8080
+#      APPLICATION_REALM: ${APPLICATION_REALM}
+#      USER_SYNC_CLIENT_ID: ${USER_SYNC_CLIENT_ID}
+#      USER_SYNC_CLIENT_SECRET: ${USER_SYNC_CLIENT_SECRET}
+#      EUREKA_CLIENT_ENABLED: ${EUREKA_CLIENT_ENABLED:-false}
+#      EUREKA_URL: ${EUREKA_URL:-http://service-discovery:8761/eureka}
+#    networks:
+#      - app_net
+#      - keycloak_net
+#
+#  keycloak-db:
+#    image: postgres:15
+#    container_name: keycloak_postgres
+#    environment:
+#      POSTGRES_DB: keycloak
+#      POSTGRES_USER: keycloak
+#      POSTGRES_PASSWORD: keycloak
+#    ports:
+#      - "5433:5432"
+#    volumes:
+#      - keycloak_pgdata:/var/lib/postgresql/data
+#    networks:
+#      - keycloak_net
+#
+#  keycloak:
+#    image: quay.io/keycloak/keycloak:26.2
+#    container_name: keycloak
+#    command: start-dev --import-realm
+#    environment:
+#      KC_DB: postgres
+#      KC_DB_URL_HOST: keycloak-db
+#      KC_DB_URL_DATABASE: keycloak
+#      KC_DB_USERNAME: keycloak
+#      KC_DB_PASSWORD: keycloak
+#      KC_HOSTNAME: localhost
+#      KEYCLOAK_ADMIN: admin
+#      KEYCLOAK_ADMIN_PASSWORD: admin
+#    ports:
+#      - "9090:8080"
+#    volumes:
+#      - ./keycloak/realm-config:/opt/keycloak/data/import
+#    depends_on:
+#      - keycloak-db
+#    networks:
+#      - keycloak_net
+#volumes:
+#  pgdata:
+#  keycloak_pgdata:
+#
+#networks:
+#  app_net:
+#  keycloak_net:
+
 services:
   db:
     image: postgres
@@ -6,6 +90,7 @@ services:
       POSTGRES_DB: mydb
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
+
     ports:
       - "5435:5432"
     volumes:
@@ -37,47 +122,51 @@ services:
       EUREKA_URL: ${EUREKA_URL:-http://service-discovery:8761/eureka}
     networks:
       - app_net
-      - keycloak_net
+      - adminservice_messaging_net
+      - adminservice_keycloak_net
 
-  keycloak-db:
-    image: postgres:15
-    container_name: keycloak_postgres
-    environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: keycloak
-    ports:
-      - "5433:5432"
-    volumes:
-      - keycloak_pgdata:/var/lib/postgresql/data
-    networks:
-      - keycloak_net
-
-  keycloak:
-    image: quay.io/keycloak/keycloak:26.2
-    container_name: keycloak
-    command: start-dev --import-realm
-    environment:
-      KC_DB: postgres
-      KC_DB_URL_HOST: keycloak-db
-      KC_DB_URL_DATABASE: keycloak
-      KC_DB_USERNAME: keycloak
-      KC_DB_PASSWORD: keycloak
-      KC_HOSTNAME: localhost
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
-    ports:
-      - "9090:8080"
-    volumes:
-      - ./keycloak/realm-config:/opt/keycloak/data/import
-    depends_on:
-      - keycloak-db
-    networks:
-      - keycloak_net
+#  keycloak-db:
+#    image: postgres:15
+#    container_name: keycloak_postgres
+#    environment:
+#      POSTGRES_DB: keycloak
+#      POSTGRES_USER: keycloak
+#      POSTGRES_PASSWORD: keycloak
+#    ports:
+#      - "5434:5432"
+#    volumes:
+#      - keycloak_pgdata:/var/lib/postgresql/data
+#    networks:
+#      -  adminservice_keycloak_net
+#
+#  keycloak:
+#    image: quay.io/keycloak/keycloak:26.2
+#    container_name: keycloak
+#    command: start-dev --import-realm
+#    environment:
+#      KC_DB: postgres
+#      KC_DB_URL_HOST: keycloak-db
+#      KC_DB_URL_DATABASE: keycloak
+#      KC_DB_USERNAME: keycloak
+#      KC_DB_PASSWORD: keycloak
+#      KC_HOSTNAME: localhost
+#      KEYCLOAK_ADMIN: admin
+#      KEYCLOAK_ADMIN_PASSWORD: admin
+#    ports:
+#      - "9090:8080"
+#    volumes:
+#      - ./keycloak/realm-config:/opt/keycloak/data/import
+#    depends_on:
+#      - keycloak-db
+#    networks:
+#      -  adminservice_keycloak_net
 volumes:
   pgdata:
   keycloak_pgdata:
 
 networks:
+  adminservice_messaging_net:
+    external: true
   app_net:
-  keycloak_net:
+  adminservice_keycloak_net:
+    external: true
